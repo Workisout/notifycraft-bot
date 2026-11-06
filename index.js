@@ -18,7 +18,16 @@ for (const archivo of archivos) {
 }
 
 async function revisarServer() {
-    const {activo, jugadores} = await estadoServer();
+    let estado;
+
+    try {
+        estado = await estadoServer();
+    } catch (err) {
+        console.error('no se pudo consultar el estado:', err.message);
+        return;
+    }
+
+    const {activo, jugadores} = estado;
 
     if (estadoAnterior !== null && activo !== estadoAnterior) {
         const canal = await client.channels.fetch(process.env.ID_CHANNEL);
